@@ -1,0 +1,21 @@
+.background-gradient {
+  background: linear-gradient(to left top, rgb(195, 215, 247), rgb(57, 88, 137)) fixed;
+}
+
+.form-look {
+  text-align: center;
+}
+
+.form-look button {
+  width: 260px;
+}
+
+.form-look input {
+  width: 260px;
+}
+
+.seperation-bar {
+  background-color: white;
+  height: 2px;
+  width: 260px;
+}

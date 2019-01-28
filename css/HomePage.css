@@ -1,0 +1,35 @@
+#nav-new-project {
+  font-size: 17px;
+  color: rgb(210, 213, 219);
+}
+
+#projects-pane {
+  margin-top: 10%;
+}
+
+#projects-pane div {
+  text-align: center;
+  padding: 50px;
+  margin: 10px;
+}
+
+#projects-pane div div {
+  background-color: white;
+  box-shadow: 3px 3px rgb(38, 41, 45);
+}
+
+#projects-pane div div div {
+  box-shadow: 0px 0px;
+}
+
+#projects-pane div div:hover {
+  cursor: pointer;
+}
+
+.nav-new-project {
+  color: white;
+}
+
+.home-background-color {
+  background-color: rgb(68, 105, 155);
+}
