@@ -30,20 +30,35 @@
       <?php include 'templates/NavUserToolbar.php' ?>
     </nav>
 
-    <!-- TODO: Loading in the projects that the user already has -->
-    <?php ?>
-
     <div id="projects-pane" class="container">
       <div class="row">
-        <div name="new-project" class="col-sm">
-          <div >New Project<br><span class="glyphicon glyphicon-plus"></span></div>
-        </div>
-        <div name="new-project" class="col-sm">
-          <div >New Project<br><span class="glyphicon glyphicon-plus"></span></div>
-        </div>
-        <div name="new-project" class="col-sm">
-          <div >New Project<br><span class="glyphicon glyphicon-plus"></span></div>
-        </div>
+        <?php
+          // Loading in the users projects.
+
+          require "backend/RetrieveProjectsInfo.php";
+
+          // TODO: Add functionality to allow the user to see the hidden projects
+          // They have.
+          $count = 0;
+          while ($row = $projectsSearchResult->fetchArray()) {
+            echo '<div name="existing-project" id=form-project-' . $row[0] . ' class="col-sm"'
+            . ($count < 3 ? '' : 'hidden') . '>
+              <div >' . $row[1] . '</div>
+            </div>';
+            $count++;
+          }
+
+          // Filling in with blank projects if the user does not currently have
+          // at least 3 projects.
+          for ($x = $count; $x < 3; $x++) {
+            echo '<div name="new-project" class="col-sm">
+              <div >New Project<br><span class="glyphicon glyphicon-plus"></span></div>
+            </div>';
+          }
+
+          $db->close();
+
+        ?>
       </div>
     </div>
 

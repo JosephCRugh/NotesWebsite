@@ -44,7 +44,7 @@
               <input class="form-control input-field-look" id="form-project-name" type="text" placeholder="Project Name">
             </div>
             <div class="form-group">
-              <input class="form-control input-field-look" id="form-project-description" type="text" placeholder="Project Description">
+              <input class="form-control input-field-look" id="form-project-description" type="text" placeholder="Project Description (Optional)">
             </div>
             <div class="radio-btn-look">
               <input type="radio" name="defaultExampleRadios">
@@ -75,7 +75,6 @@
               </div>
               <button id="submit-create-project" type="button" class="btn btn-primary">Create</button>
             </div>
-
           </div>
         </div>
       </div>

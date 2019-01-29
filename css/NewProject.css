@@ -51,6 +51,7 @@ input[type=radio] {
 
 #form-users-name-displays {
   width: 390px;
+  margin-bottom: 5px;
 }
 
 #form-users-name-displays ul {

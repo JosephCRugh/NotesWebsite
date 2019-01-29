@@ -1,10 +1,6 @@
 <?php
 
-  session_start();
-
-  if (!isset($_SESSION['email'])) {
-    return;
-  }
+  require 'EnforceSession.php';
 
   $firstName = $_POST["firstName"];
   $lastName = $_POST["lastName"];
@@ -13,24 +9,20 @@
     return;
   }
 
-  $db = new SQLite3("/srv/http/NotesSite/Notes.db");
-
-  if (!$db) {
-    // Failed to establish a connection for some reason.
-    // Normally a failer to make a connection will cause a 500 error though.
-    return;
-  }
+  require 'EnforceSqliteConnection.php';
 
   $querySearch = "SELECT id, first_name, last_name FROM user_credentials ";
+  // Not including self in search query.
+  $notSelf = " NOT id=" . $db->escapeString($_SESSION['sess_id']);
 
   // If the last name was not set then only search for users based on first name.
   if ($lastName == "undefined" || empty($lastName)) {
-    $querySearch .= "WHERE first_name LIKE '" . $db->escapeString($firstName) . "%' LIMIT 5";
+    $querySearch .= "WHERE" .  $notSelf . " AND first_name LIKE '" . $db->escapeString($firstName) . "%' LIMIT 5";
   } else {
     if ($lastName.length > 20) {
       return;
     }
-    $querySearch .= "WHERE first_name = '" . $db->escapeString($firstName) . "' COLLATE NOCASE AND last_name LIKE '" . $db->escapeString($lastName) . "%' LIMIT 5";
+    $querySearch .= "WHERE " . $notSelf .  " AND first_name='" . $db->escapeString($firstName) . "' COLLATE NOCASE AND last_name LIKE '" . $db->escapeString($lastName) . "%' LIMIT 5";
   }
 
   $result = $db->query($querySearch);

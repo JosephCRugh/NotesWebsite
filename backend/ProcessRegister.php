@@ -1,12 +1,6 @@
 <?php
 
-  session_start();
-
-  // No reason to process registration request if the user is
-  // already logged in.
-  if (isset($_SESSION['email'])) {
-    return;
-  }
+  require 'EnforceSession.php';
 
   $firstName = $_POST["firstName"];
   $lastName = $_POST["lastName"];
@@ -57,13 +51,7 @@
     return;
   }
 
-  $db = new SQLite3("/srv/http/NotesSite/Notes.db");
-
-  if (!$db) {
-    // Failed to establish a connection for some reason.
-    // Normally a failer to make a connection will cause a 500 error though.
-    return;
-  }
+  require 'EnforceSqliteConnection.php';
 
   // Making sure the email isn't taken.
   $emailSearchStmt = $db->prepare("SELECT EXISTS(SELECT 1 FROM user_credentials WHERE email=?)");
@@ -74,6 +62,7 @@
   if ($result->fetchArray()[0]) {
     // Send information to the user telling them the email is taken.
     echo "fail";
+    $db->close();
     return;
   }
 
@@ -88,11 +77,17 @@
 
   $newUserStatement->execute();
 
-  $db->close();
+  $selectIdStatement = $db->prepare("SELECT id FROM user_credentials WHERE email=?");
+  $selectIdStatement->bindValue(1, $email, SQLITE3_TEXT);
+
+  $idResult = $selectIdStatement->execute();
 
   $_SESSION['email'] = $email;
   $_SESSION['first_name'] = $firstName;
   $_SESSION['last_name'] = $lastName;
+  $_SESSION['sess_id'] = $idResult->fetchArray()[0];
+
+  $db->close();
   echo "success";
 
 ?>
