@@ -7,8 +7,10 @@
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 
     <script src="js/SharedForm.js"></script>
+    <script src="js/UserNavModel.js"></script>
     <script src="js/NewProject.js"></script>
 
+    <link rel="stylesheet" type="text/css" href="css/UserNavModel.css">
     <link rel="stylesheet" type="text/css" href="css/SharedNav.css">
     <link rel="stylesheet" type="text/css" href="css/NewProject.css">
 
@@ -22,7 +24,7 @@
       <a id="nav-logo" class="navbar-brand">Notes</a>
 
       <!-- Navigation link to home page -->
-      <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="collapse navbar-collapse">
         <ul class="navbar-nav">
           <li class="nav-item active">
             <a id="nav-homepage" class="nav-link" href="HomePage.php"><span class="glyphicon glyphicon-home"></span> Home<span class="sr-only">(current)</span></a>

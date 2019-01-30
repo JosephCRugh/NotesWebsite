@@ -7,6 +7,9 @@
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 
     <script src="js/HomePage.js"></script>
+    <script src="js/UserNavModel.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/UserNavModel.css">
     <link rel="stylesheet" type="text/css" href="css/SharedNav.css">
     <link rel="stylesheet" type="text/css" href="css/HomePage.css">
 
@@ -19,7 +22,7 @@
       <a id="nav-logo" class="navbar-brand">Notes</a>
 
       <!-- The navigation links to project information -->
-      <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="collapse navbar-collapse">
         <ul class="navbar-nav">
           <li class="nav-item active">
             <a id="nav-new-project" class="nav-link" href="NewProject.php"><span class="glyphicon glyphicon-plus"></span> New Project<span class="sr-only">(current)</span></a>
@@ -36,6 +39,9 @@
           // Loading in the users projects.
 
           require "backend/RetrieveProjectsInfo.php";
+
+          $retrievalData = getUserProjectInfo($_SESSION['sess_id']);
+          $projectsSearchResult = $retrievalData['projectSearchResult'];
 
           // TODO: Add functionality to allow the user to see the hidden projects
           // They have.
@@ -56,7 +62,7 @@
             </div>';
           }
 
-          $db->close();
+          $retrievalData['database']->close();
 
         ?>
       </div>

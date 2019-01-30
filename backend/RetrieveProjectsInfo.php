@@ -1,11 +1,17 @@
 <?php
 
-  require 'EnforceSession.php';
-  require 'EnforceSqliteConnection.php';
+    function getUserProjectInfo($sessId) {
 
-  $projectsSearchStmt = $db->prepare("SELECT * FROM user_projects WHERE id=?");
-  $projectsSearchStmt->bindValue(1, $_SESSION['sess_id'], SQLITE3_INTEGER);
+      require 'EnforceSession.php';
+      require 'EnforceSqliteConnection.php';
 
-  $projectsSearchResult = $projectsSearchStmt->execute();
+      $projectsSearchStmt = $db->prepare("SELECT * FROM user_projects WHERE id=?");
+      $projectsSearchStmt->bindValue(1, $sessId, SQLITE3_INTEGER);
+
+      return array(
+        "projectSearchResult" => $projectsSearchStmt->execute(),
+        "database" => $db
+      );
+    }
 
 ?>

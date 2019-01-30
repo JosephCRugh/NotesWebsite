@@ -9,4 +9,8 @@
         }
   ?>
   <img width="20" height="20" src="<?php echo $portraitPath; ?>">
+  <ul id="nav-user-toolbar-list">
+    <li><a href="#">Settings</a></li>
+    <li id="logout-link"><a href="backend/SessionClose.php">Logout</a></li>
+  </ul>
 </div>

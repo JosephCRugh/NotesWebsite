@@ -1,0 +1,20 @@
+#nav-user-toolbar {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+#nav-user-toolbar-list {
+  padding: 0px;
+  margin: 0px;
+  padding-left: 20px;
+  list-style-type: none;
+}
+
+#nav-user-toolbar-list li a {
+  color: rgb(43, 46, 51);
+}
+
+#logout-link a {
+  color: rgb(221, 31, 31) !important;
+}
