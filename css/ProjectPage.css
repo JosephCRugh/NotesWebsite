@@ -6,3 +6,94 @@
 .home-background-color {
   background-color: rgb(68, 105, 155);
 }
+
+.notes-style {
+  text-align: center;
+  width: 200px;
+  background-color: white;
+  position: absolute;
+}
+
+.notes-style textarea {
+  font-size: 15px;
+  width: 200px;
+  height: 300px;
+  resize: none;
+}
+
+.notes-style div h3 {
+  display: inline;
+}
+
+.notes-style div span {
+  display: inline;
+  float: right;
+  padding-right: 5px;
+  cursor: pointer;
+}
+
+.notes-style div span[name="notes-delete"] {
+  color: rgb(219, 42, 30);
+}
+
+.notes-style div input {
+  float: left;
+  width: 175px;
+  font-size: 15px;
+}
+
+.notes-style textarea:focus {
+  border-color: #CCCCCC;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.notes-bottom {
+  height: 20px;
+}
+
+.gray-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(100, 100, 100, 0.5);
+}
+
+#notes-container {
+  width: 100%;
+  height: 100%;
+}
+
+#notes-action-buttons {
+  background-color: rgb(58, 95, 145);
+}
+
+#notes-action-buttons button {
+  display: inline;
+  font-size: 15px;
+}
+
+#notes-action-buttons input {
+  display: inline;
+  width: 200px;
+}
+
+#delete-option {
+  text-align: center;
+  width: 250px;
+  height: 70px;
+  background-color: white;
+  position: absolute;
+  margin: 0 auto;
+  left: 0px;
+  right: 0px;
+  top: 250px;
+  border-radius: 5px;
+}
+
+#delete-option button {
+  font-size: 15px;
+  margin-top: 15px;
+}

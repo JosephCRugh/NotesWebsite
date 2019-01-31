@@ -48,11 +48,15 @@
     <?php require 'templates/HeaderTemplate.php' ?>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
     <script src="js/UserNavModel.js"></script>
+    <script src="js/ProjectPage.js"></script>
 
     <link rel="stylesheet" type="text/css" href="css/UserNavModel.css">
     <link rel="stylesheet" type="text/css" href="css/SharedNav.css">
     <link rel="stylesheet" type="text/css" href="css/ProjectPage.css">
+
+    <title><?php echo $_GET['name']; ?></title>
 
   </head>
   <body class="home-background-color">
@@ -73,6 +77,34 @@
       <?php include 'templates/NavUserToolbar.php' ?>
 
     </nav>
+
+    <!-- TODO: load the notes from the server -->
+    <div id="notes-action-buttons">
+      <button id="add-note-button" type="button" class="btn btn-primary">Add Note</button>
+      <input type="text" class="form-control" placeholder="Search For Note"></input>
+    </div>
+
+    <div id="notes-container">
+      <div class="notes-style">
+        <div>
+          <h3>Title</h4>
+          <span name="title-edit" class="glyphicon glyphicon-pencil"></span>
+          <input type="text"></input>
+        </div>
+        <textarea class="form-control z-depth-1"></textarea>
+        <div class="notes-bottom">
+          <span name="notes-delete" class="glyphicon glyphicon-trash"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gray-overlay" hidden></div>
+
+    <!-- Deletion selection div -->
+    <div id="delete-option" hidden>
+      <button name="do-delete" type="button" class="btn btn-danger">Yes Delete</button>
+      <button name="no-delete" type="button" class="btn btn-primary">No Don't!</button>
+    </div>
 
   </body>
 </html>
