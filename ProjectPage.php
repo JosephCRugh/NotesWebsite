@@ -37,6 +37,9 @@
       }
     }
 
+    // Since they have access to the page we are going to store the page owner id.
+    $_SESSION['pageOwnerId'] = $_GET['id'];
+
     $retrievalData['database']->close();
   }
 
@@ -49,6 +52,8 @@
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
+
+    <script src="js/SharedForm.js"></script>
     <script src="js/UserNavModel.js"></script>
     <script src="js/ProjectPage.js"></script>
 
@@ -85,17 +90,33 @@
     </div>
 
     <div id="notes-container">
-      <div class="notes-style">
-        <div>
-          <h3>Title</h4>
-          <span name="title-edit" class="glyphicon glyphicon-pencil"></span>
-          <input type="text"></input>
-        </div>
-        <textarea class="form-control z-depth-1"></textarea>
-        <div class="notes-bottom">
-          <span name="notes-delete" class="glyphicon glyphicon-trash"></span>
-        </div>
-      </div>
+      <?php
+
+        // Loading in the already existing notes for the page.
+        require 'backend/EnforceSqliteConnection.php';
+
+        $notesQueryStmt = $db->prepare("SELECT * FROM notes WHERE owner_id=?");
+        $notesQueryStmt->bindValue(1, $pageOwnerId, SQLITE3_INTEGER);
+
+        $notesResult = $notesQueryStmt->execute();
+
+        while ($row = $notesResult->fetchArray()) {
+          echo '<div class="notes-style" style="left: ' . $row[5] . '; top: ' . $row[6] . ';" id="note-' . $row[0] . '">' .
+            '<div>' .
+              '<h3>' . $row[2] . '</h3>' .
+              '<span name="title-edit" class="glyphicon glyphicon-pencil"></span>' .
+              '<input type="text" class="form-control"></input>' .
+            '</div>' .
+            '<textarea class="form-control z-depth-1">' . $row[3] . '</textarea>' .
+            '<div class="notes-bottom">' .
+              '<span name="notes-delete" class="glyphicon glyphicon-trash"></span>' .
+            '</div>' .
+          '</div>';
+        }
+
+        $db->close();
+
+      ?>
     </div>
 
     <div class="gray-overlay" hidden></div>

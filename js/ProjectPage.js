@@ -10,6 +10,7 @@ class Note {
     this.inputTitle.hide();
     this.headerTitle = headerTitle;
     this.noteDiv = noteDiv;
+    this.previousTitle = headerTitle.text();
 
     noteDiv.draggable({ containment: "#notes-container" });
 
@@ -19,6 +20,7 @@ class Note {
     });
 
     this.inputTitle.on('keyup', function(event) {
+      $(this).removeClass('is-invalid');
       self.performInputTitleKeyUp(self, event)
     });
 
@@ -29,19 +31,45 @@ class Note {
 
   performInputTitleKeyUp(self, event) {
     if (event.keyCode == 13) {
-      self.headerTitle.text(self.inputTitle.val());
-      self.toggleTitleInput(self);
+      self.isInputTitle = false;
+      if (self.processTitleChange(self)) {
+        self.toggleTitleInput(self);
+      }
     }
   }
 
   performEditNoteTitle(self) {
     if (self.isInputTitle) {
-      self.headerTitle.text(self.inputTitle.val());
+      if (!self.processTitleChange(self)) {
+        return;
+      }
     }
     self.isInputTitle = !self.isInputTitle;
 
     self.inputTitle.val(self.headerTitle.text());
     self.toggleTitleInput(self);
+  }
+
+  processTitleChange(self) {
+    self.headerTitle.text(self.inputTitle.val());
+
+    if (self.headerTitle.text().length > 20 || isEmpty(self.headerTitle.text())) {
+      self.noteDiv.find('div input').addClass('is-invalid');
+      return false;
+    }
+
+    if (this.previousTitle !== self.headerTitle.text()) {
+      this.previousTitle = self.headerTitle.text();
+    }
+
+    // Sending the new title off to the server.
+    $.post("backend/ChangeNoteTitle.php", {
+      noteId: self.noteDiv.attr('id').split('-')[1],
+      title: self.headerTitle.text()
+    });
+
+    self.isInputTitle = false;
+    return true;
   }
 
   toggleTitleInput(self) {
@@ -71,9 +99,9 @@ $(document).ready(function() {
 
 function setupNodes() {
   $('.notes-style').each(function (noteDiv) {
-      new Note(currentNoteId, $(this), $(this).find('div input'), $(this).find('div h3'));
-      $(this).attr('id', 'note' + currentNoteId);
-      currentNoteId++;
+      var noteId = parseInt($(this).attr('id').split('-')[1]);
+      new Note(noteId, $(this), $(this).find('div input'), $(this).find('div h3'));
+      currentNoteId = noteId + 1;
   });
 }
 
@@ -83,8 +111,8 @@ function addNotes() {
 
     var noteDiv = $('<div class="notes-style">' +
       '<div>' +
-        '<h3></h4>' +
-        '<span class="glyphicon glyphicon-pencil"></span>' +
+        '<h3>Title</h3>' +
+        '<span name="title-edit" class="glyphicon glyphicon-pencil"></span>' +
         '<input type="text"></input>' +
       '</div>' +
       '<textarea class="form-control z-depth-1"></textarea>' +
@@ -95,9 +123,17 @@ function addNotes() {
 
     $('#notes-container').append(noteDiv);
     let note = new Note(currentNoteId, noteDiv, noteDiv.find('div input'), noteDiv.find('div h3'));
+    noteDiv.attr('id', 'note-' + currentNoteId);
+
+    $.post("backend/AddNote.php", {
+      title: "Title",
+      posX: noteDiv.position().left,
+      posY: noteDiv.position().top
+    });
+
     note.performEditNoteTitle(note);
-    noteDiv.attr('id', 'note' + currentNoteId);
-    currentNoteId++;
+
+    findCurrentId();
   });
 }
 
@@ -111,8 +147,23 @@ function deleteNotes() {
   });
 
   $('#delete-option button[name="do-delete"]').click(function() {
-    $('#notes-container').find('#note' + noteIdToDelete).remove();
+    $('#notes-container').find('#note-' + noteIdToDelete).remove();
     $('#delete-option').hide();
     $('.gray-overlay').hide();
+
+    // Telling the server to delete the note.
+    $.post("backend/DeleteNote.php", {
+      noteId: noteIdToDelete
+    });
+
+    findCurrentId();
   });
+}
+
+function findCurrentId() {
+  var maxId = -1;
+  $('.notes-style').each(function() {
+    maxId = parseInt($(this).attr('id').split('-')[1]);
+  });
+  currentNoteId = maxId + 1;
 }
