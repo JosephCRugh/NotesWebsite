@@ -25,7 +25,7 @@
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav">
           <li class="nav-item active">
-            <a id="nav-new-project" class="nav-link" href="NewProject.php"><span class="glyphicon glyphicon-plus"></span> New Project<span class="sr-only">(current)</span></a>
+            <a id="nav-link-color" class="nav-link" href="NewProject.php"><span class="glyphicon glyphicon-plus"></span> New Project<span class="sr-only">(current)</span></a>
           </li>
         </ul>
       </div>

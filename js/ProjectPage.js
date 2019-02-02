@@ -24,8 +24,40 @@ class Note {
       self.performInputTitleKeyUp(self, event)
     });
 
+    this.noteDiv.find('textarea').focusin(function() {
+      self.noteDiv.find('div button').removeAttr('hidden');
+      self.noteDiv.find('div button').show();
+      self.noteDiv.find('.notes-bottom').css('height', '42px');
+    });
+
+    this.noteDiv.find('textarea').focusout(function() {
+      self.processContentEdit(self);
+    });
+
+    this.noteDiv.find('button').click(function() {
+      self.processContentEdit(self);
+    });
+
     this.noteDiv.find('div span[name="notes-delete"]').click(function() {
       self.popupDeleteOptions(self);
+    });
+  }
+
+  processContentEdit(self) {
+    var content = self.noteDiv.find('textarea').val();
+
+    if (content.length > 500) {
+        self.noteDiv.find('textarea').focus();
+        return;
+    }
+
+    self.noteDiv.find('.notes-bottom').css('height', '20px');
+    self.noteDiv.find('button').hide();
+
+    $.post('backend/ChangeNoteContent.php', {
+      projectName: $('title').text(),
+      noteId: self.noteId,
+      content: content
     });
   }
 
@@ -64,6 +96,7 @@ class Note {
 
     // Sending the new title off to the server.
     $.post("backend/ChangeNoteTitle.php", {
+      projectName: $('title').text(),
       noteId: self.noteDiv.attr('id').split('-')[1],
       title: self.headerTitle.text()
     });
@@ -126,6 +159,7 @@ function addNotes() {
     noteDiv.attr('id', 'note-' + currentNoteId);
 
     $.post("backend/AddNote.php", {
+      projectName: $('title').text(),
       title: "Title",
       posX: noteDiv.position().left,
       posY: noteDiv.position().top
@@ -151,8 +185,10 @@ function deleteNotes() {
     $('#delete-option').hide();
     $('.gray-overlay').hide();
 
+    console.log("trying to delete a note..");
     // Telling the server to delete the note.
     $.post("backend/DeleteNote.php", {
+      projectName: $('title').text(),
       noteId: noteIdToDelete
     });
 

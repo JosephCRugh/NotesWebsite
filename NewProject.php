@@ -27,7 +27,7 @@
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav">
           <li class="nav-item active">
-            <a id="nav-homepage" class="nav-link" href="HomePage.php"><span class="glyphicon glyphicon-home"></span> Home<span class="sr-only">(current)</span></a>
+            <a id="nav-link-color" class="nav-link" href="HomePage.php"><span class="glyphicon glyphicon-home"></span> Home<span class="sr-only">(current)</span></a>
           </li>
         </ul>
       </div>

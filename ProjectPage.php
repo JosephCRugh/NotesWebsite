@@ -2,30 +2,14 @@
 
 <?php
 
-  // Validating that the and project name exist.
-  {
-    $pageOwnerId = $_GET['id'];
-    $projectName = $_GET['name'];
+  require 'templates/ValidateProjectExist.php';
 
-    require 'backend/EnforceSqliteConnection.php';
-
-    $validatePageStmt = $db->prepare("SELECT EXISTS(SELECT 1 FROM user_projects WHERE id=? AND name=?)");
-    $validatePageStmt->bindValue(1, $pageOwnerId, SQLITE3_INTEGER);
-    $validatePageStmt->bindValue(2, $projectName, SQLITE3_TEXT);
-
-    $validatePageRes = $validatePageStmt->execute();
-    if (!$validatePageRes->fetchArray()[0]) {
-      header( 'Location: Login.php' );
-    }
-
-    $db->close();
-  }
-
+  $projectDesc = "";
   // Making sure the user has access to view this page.
   {
     require 'backend/RetrieveProjectsInfo.php';
 
-    $retrievalData = getUserProjectInfo($pageOwnerId);
+    $retrievalData = getUserProjectInfoByName($pageOwnerId, $_GET['name']);
     $projectsSearchResult = $retrievalData['projectSearchResult']->fetchArray();
 
     $sessionId = $_SESSION['sess_id'];
@@ -39,6 +23,7 @@
 
     // Since they have access to the page we are going to store the page owner id.
     $_SESSION['pageOwnerId'] = $_GET['id'];
+    $projectDesc = $projectsSearchResult[2];
 
     $retrievalData['database']->close();
   }
@@ -70,23 +55,29 @@
 
       <!-- Content on the left side of the navbar -->
       <a id="nav-logo" class="navbar-brand">Notes</a>
-
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav">
           <li class="nav-item active">
-            <a id="nav-homepage" class="nav-link" href="HomePage.php"><span class="glyphicon glyphicon-home"></span> Home<span class="sr-only">(current)</span></a>
+            <a id="nav-link-color" class="nav-link" href="HomePage.php"><span class="glyphicon glyphicon-home"></span> Home<span class="sr-only">(current)</span></a>
           </li>
+          <?php
+            // Display a settings option for the owner.
+            if ($_SESSION['pageOwnerId'] == $_SESSION['sess_id']) {
+              echo '<li class="nav-item active">' .
+                      '<a id="nav-link-color" class="nav-link" href="ProjectSettings.php?name=' . $_GET['name'] . '&id=' . $_GET['id'] . '"> Project Settings</a>' .
+                    '</li>';
+            }
+          ?>
         </ul>
       </div>
 
       <?php include 'templates/NavUserToolbar.php' ?>
-
     </nav>
 
-    <!-- TODO: load the notes from the server -->
     <div id="notes-action-buttons">
       <button id="add-note-button" type="button" class="btn btn-primary">Add Note</button>
       <input type="text" class="form-control" placeholder="Search For Note"></input>
+      <p style="display: inline;"><?php echo $projectDesc; ?></p>
     </div>
 
     <div id="notes-container">
@@ -95,8 +86,9 @@
         // Loading in the already existing notes for the page.
         require 'backend/EnforceSqliteConnection.php';
 
-        $notesQueryStmt = $db->prepare("SELECT * FROM notes WHERE owner_id=?");
+        $notesQueryStmt = $db->prepare("SELECT * FROM notes WHERE owner_id=? AND project_name=?");
         $notesQueryStmt->bindValue(1, $pageOwnerId, SQLITE3_INTEGER);
+        $notesQueryStmt->bindValue(2, $_GET['name'], SQLITE3_TEXT);
 
         $notesResult = $notesQueryStmt->execute();
 
@@ -109,6 +101,7 @@
             '</div>' .
             '<textarea class="form-control z-depth-1">' . $row[3] . '</textarea>' .
             '<div class="notes-bottom">' .
+              '<button type="text" class="btn btn-primary" style="width: 100%;" hidden>Finish Edit</button>' .
               '<span name="notes-delete" class="glyphicon glyphicon-trash"></span>' .
             '</div>' .
           '</div>';

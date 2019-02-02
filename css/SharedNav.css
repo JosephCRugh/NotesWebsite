@@ -1,10 +1,17 @@
+.nav-link {
+  font-size: 17px;
+}
+
 .nav-style {
   background-color: rgb(31, 34, 38);
+  height: 50px;
 }
 
 #nav-logo {
   font-size: 25px;
   color: white;
+  padding: 0px;
+  margin-left: 10px;
 }
 
 #nav-user-toolbar {
@@ -15,4 +22,16 @@
 
 #nav-user-toolbar:hover {
   cursor: pointer;
+}
+
+#nav-link-color {
+  color: rgb(210, 213, 219);
+}
+
+#nav-link-color:hover {
+  color: rgb(250, 253, 259);
+}
+
+.navbar {
+  padding: 0 !important;
 }
