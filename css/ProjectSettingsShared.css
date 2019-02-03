@@ -1,0 +1,77 @@
+.input-field-look {
+  height: 30px;
+  font-size: 15px;
+  padding: 3px;
+}
+
+#form-added-users {
+  height: 30px;
+}
+
+#form-added-users ul {
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+#form-added-users ul li {
+  display: inline;
+  padding-right: 5px;
+  padding-left: 5px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  margin-right: 5px;
+  border: 1px solid #ea9b33;
+  border-radius: 5px;
+}
+
+#form-added-users ul li span {
+  color: #ea9b33;
+}
+
+#form-added-users ul li span:hover {
+  color: #d13f1f;
+}
+
+#form-added-users ul li:hover {
+  cursor: pointer;
+  border: 1px solid #d13f1f;
+}
+
+#form-added-users ul li label:hover {
+  cursor: pointer;
+}
+
+#form-search-users {
+  width: 390px;
+}
+
+#form-users-name-displays {
+  width: 390px;
+  margin-bottom: 5px;
+}
+
+#form-users-name-displays ul {
+  list-style-type: none;
+  margin: 0px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #628ee5;
+}
+
+#form-users-name-displays ul li {
+  margin-top: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 2px;
+  border-radius: 3px;
+}
+
+#form-users-name-displays ul li:hover {
+  background-color: #628ee5;
+  cursor: pointer;
+}
+
+#form-users-name-displays ul li label:hover {
+  cursor: pointer;
+}

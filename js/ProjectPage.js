@@ -13,110 +13,38 @@ class Note {
     this.previousTitle = headerTitle.text();
 
     noteDiv.draggable({ containment: "#notes-container" });
-
-    var self = this;
-    noteDiv.find('div span[name="title-edit"]').click(function() {
-        self.performEditNoteTitle(self);
-    });
-
-    this.inputTitle.on('keyup', function(event) {
-      $(this).removeClass('is-invalid');
-      self.performInputTitleKeyUp(self, event)
-    });
-
-    this.noteDiv.find('textarea').focusin(function() {
-      self.noteDiv.find('div button').removeAttr('hidden');
-      self.noteDiv.find('div button').show();
-      self.noteDiv.find('.notes-bottom').css('height', '42px');
-    });
-
-    this.noteDiv.find('textarea').focusout(function() {
-      self.processContentEdit(self);
-    });
-
-    this.noteDiv.find('button').click(function() {
-      self.processContentEdit(self);
-    });
-
-    this.noteDiv.find('div span[name="notes-delete"]').click(function() {
-      self.popupDeleteOptions(self);
-    });
   }
 
-  processContentEdit(self) {
-    var content = self.noteDiv.find('textarea').val();
-
-    if (content.length > 500) {
-        self.noteDiv.find('textarea').focus();
-        return;
-    }
-
-    self.noteDiv.find('.notes-bottom').css('height', '20px');
-    self.noteDiv.find('button').hide();
-
-    $.post('backend/ChangeNoteContent.php', {
-      projectName: $('title').text(),
-      noteId: self.noteId,
-      content: content
-    });
+  getPreviousTitle() {
+    return this.previousTitle;
   }
 
-  performInputTitleKeyUp(self, event) {
-    if (event.keyCode == 13) {
-      self.isInputTitle = false;
-      if (self.processTitleChange(self)) {
-        self.toggleTitleInput(self);
-      }
-    }
+  setPreviousTitle(title) {
+    this.previousTitle = title;
   }
 
-  performEditNoteTitle(self) {
-    if (self.isInputTitle) {
-      if (!self.processTitleChange(self)) {
-        return;
-      }
-    }
-    self.isInputTitle = !self.isInputTitle;
-
-    self.inputTitle.val(self.headerTitle.text());
-    self.toggleTitleInput(self);
+  getInputTitle() {
+    return this.inputTitle;
   }
 
-  processTitleChange(self) {
-    self.headerTitle.text(self.inputTitle.val());
-
-    if (self.headerTitle.text().length > 20 || isEmpty(self.headerTitle.text())) {
-      self.noteDiv.find('div input').addClass('is-invalid');
-      return false;
-    }
-
-    if (this.previousTitle !== self.headerTitle.text()) {
-      this.previousTitle = self.headerTitle.text();
-    }
-
-    // Sending the new title off to the server.
-    $.post("backend/ChangeNoteTitle.php", {
-      projectName: $('title').text(),
-      noteId: self.noteDiv.attr('id').split('-')[1],
-      title: self.headerTitle.text()
-    });
-
-    self.isInputTitle = false;
-    return true;
+  getHeaderTitle() {
+    return this.headerTitle;
   }
 
-  toggleTitleInput(self) {
-    self.headerTitle.toggle();
-    self.inputTitle.toggle();
-    self.inputTitle.focus();
+  getNoteDiv() {
+    return this.noteDiv;
   }
 
-  popupDeleteOptions(self) {
-    $('#delete-option').removeAttr('hidden');
-    $('#delete-option').show();
-    $('.gray-overlay').removeAttr('hidden');
-    $('.gray-overlay').show();
-    noteIdToDelete = self.noteId;
+  getNoteId() {
+    return this.noteId;
+  }
+
+  getIsInputTitle() {
+    return this.isInputTitle;
+  }
+
+  setIsInputTitle(tof) {
+    this.isInputTitle = tof;
   }
 }
 
@@ -133,7 +61,7 @@ $(document).ready(function() {
 function setupNodes() {
   $('.notes-style').each(function (noteDiv) {
       var noteId = parseInt($(this).attr('id').split('-')[1]);
-      new Note(noteId, $(this), $(this).find('div input'), $(this).find('div h3'));
+      performNoteActions(new Note(noteId, $(this), $(this).find('div input'), $(this).find('div h3')));
       currentNoteId = noteId + 1;
   });
 }
@@ -150,6 +78,7 @@ function addNotes() {
       '</div>' +
       '<textarea class="form-control z-depth-1"></textarea>' +
       '<div class="notes-bottom">' +
+        '<button type="text" class="btn btn-primary" style="width: 100%;" hidden>Finish Edit</button>' +
         '<span name="notes-delete" class="glyphicon glyphicon-trash"></span>' +
       '</div>' +
     '</div>');
@@ -157,6 +86,8 @@ function addNotes() {
     $('#notes-container').append(noteDiv);
     let note = new Note(currentNoteId, noteDiv, noteDiv.find('div input'), noteDiv.find('div h3'));
     noteDiv.attr('id', 'note-' + currentNoteId);
+
+    performNoteActions(note);
 
     $.post("backend/AddNote.php", {
       projectName: $('title').text(),
@@ -185,7 +116,6 @@ function deleteNotes() {
     $('#delete-option').hide();
     $('.gray-overlay').hide();
 
-    console.log("trying to delete a note..");
     // Telling the server to delete the note.
     $.post("backend/DeleteNote.php", {
       projectName: $('title').text(),
@@ -194,6 +124,120 @@ function deleteNotes() {
 
     findCurrentId();
   });
+}
+
+function performNoteActions(note) {
+
+  var noteDiv = note.getNoteDiv();
+
+  processNoteContentEdit(note, noteDiv);
+
+  processNotePopupDltOpts(note, noteDiv);
+
+  performNoteInputTitleKeyUp(note, noteDiv);
+
+  performEditNoteTitle(note, noteDiv);
+
+  noteContentFocus(noteDiv);
+
+}
+
+function noteContentFocus(noteDiv) {
+  noteDiv.find('textarea').focusin(function() {
+    noteDiv.find('div button').removeAttr('hidden');
+    noteDiv.find('div button').show();
+    noteDiv.find('.notes-bottom').css('height', '42px');
+  });
+}
+
+function processNoteContentEdit(note, noteDiv) {
+
+  var contentEditCallback = function() {
+    var content = noteDiv.find('textarea').val();
+
+    if (content.length > 500) {
+        noteDiv.find('textarea').focus();
+        return;
+    }
+
+    noteDiv.find('.notes-bottom').css('height', '20px');
+    noteDiv.find('button').hide();
+
+    $.post('backend/ChangeNoteContent.php', {
+      projectName: $('title').text(),
+      noteId: note.getNoteId(),
+      content: content
+    });
+  };
+
+  noteDiv.find('textarea').focusout(contentEditCallback);
+
+  noteDiv.find('button').click(contentEditCallback);
+}
+
+function processNotePopupDltOpts(note, noteDiv) {
+  noteDiv.find('div span[name="notes-delete"]').click(function() {
+    $('#delete-option').removeAttr('hidden');
+    $('#delete-option').show();
+    $('.gray-overlay').removeAttr('hidden');
+    $('.gray-overlay').show();
+    noteIdToDelete = note.getNoteId();
+  });
+}
+
+function performNoteInputTitleKeyUp(note, noteDiv) {
+  note.getInputTitle().on('keyup', function(event) {
+    $(this).removeClass('is-invalid')
+    if (event.keyCode == 13) {
+      note.setIsInputTitle(false);
+      if (processNoteTitleChange(note, noteDiv)) {
+        toggleNoteTitleInput(note);
+      }
+    }
+  });
+}
+
+function performEditNoteTitle(note, noteDiv) {
+  noteDiv.find('div span[name="title-edit"]').click(function() {
+    if (note.getIsInputTitle()) {
+      if (!processNoteTitleChange(note, noteDiv)) {
+        return;
+      }
+    }
+    note.setIsInputTitle(!note.getIsInputTitle());
+
+    note.getInputTitle().val(note.getHeaderTitle().text());
+    toggleNoteTitleInput(note);
+  });
+}
+
+function processNoteTitleChange(note, noteDiv) {
+  note.getHeaderTitle().text(note.getInputTitle().val());
+
+  if (note.getHeaderTitle().text().length > 20 || isEmpty(note.getHeaderTitle().text())) {
+    noteDiv.find('div input').addClass('is-invalid');
+    return false;
+  }
+
+  if (note.getPreviousTitle() !== note.getHeaderTitle().text()) {
+    note.setPreviousTitle(note.getHeaderTitle().text());
+  }
+
+  // Sending the new title off to the server.
+  $.post("backend/ChangeNoteTitle.php", {
+    projectName: $('title').text(),
+    noteId: noteDiv.attr('id').split('-')[1],
+    title: note.getHeaderTitle().text()
+  });
+
+  note.setIsInputTitle(false);
+  return true;
+}
+
+function toggleNoteTitleInput(note) {
+  note.getHeaderTitle().toggle();
+  note.getInputTitle().toggle();
+  note.getInputTitle().focus();
 }
 
 function findCurrentId() {

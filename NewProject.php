@@ -7,9 +7,11 @@
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 
     <script src="js/SharedForm.js"></script>
+    <script src="js/UserSearchBar.js"></script>
     <script src="js/UserNavModel.js"></script>
     <script src="js/NewProject.js"></script>
 
+    <link rel="stylesheet" type="text/css" href="css/ProjectSettingsShared.css">
     <link rel="stylesheet" type="text/css" href="css/UserNavModel.css">
     <link rel="stylesheet" type="text/css" href="css/SharedNav.css">
     <link rel="stylesheet" type="text/css" href="css/NewProject.css">

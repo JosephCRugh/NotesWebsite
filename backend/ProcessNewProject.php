@@ -49,13 +49,8 @@
     }
   }
 
-  // Checking is the project name is already taken.
-  $projectNameTakenStmt = $db->prepare("SELECT EXISTS(SELECT 1 FROM user_projects WHERE id=? AND name=?)");
-  $projectNameTakenStmt->bindValue(1, $_SESSION['sess_id'], SQLITE3_INTEGER);
-  $projectNameTakenStmt->bindValue(2, $projectName, SQLITE3_TEXT);
-
-  $result = $projectNameTakenStmt->execute();
-  if ($result->fetchArray()[0]) {
+  require 'CheckIfProjectIsTaken.php';
+  if (isProjectNameTaken($db, $projectName)) {
     $db->close();
     echo "fail";
     return;
