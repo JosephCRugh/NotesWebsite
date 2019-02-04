@@ -20,16 +20,16 @@ $( document ).ready(function() {
 function editProjectName() {
 
   $('#form-project-name').click(function() {
-      $('#save-name-btn').text('save').removeClass('btn-danger').addClass('btn-primary');
+      $('#save-name-btn').text('Save').removeClass('btn-danger').addClass('btn-primary');
       $(this).removeClass('is-invalid');
+      $('#save-name-label-success').hide();
+      $('#save-name-span-success').hide();
   });
 
   $('#save-name-btn').click(function() {
 
-    var currentProjectName = $('title').text().split(" ")[0]
+    var currentProjectName = $('title').text().split(" ")[0];
     var projectName = $('#form-project-name').val();
-
-    console.log("CURRENT PROJECT NAME = " + currentProjectName);
 
     if (projectName === currentProjectName) {
       return;
@@ -61,7 +61,9 @@ function editProjectName() {
         $('#form-project-name').addClass('is-invalid');
         setFailButton($('#save-name-btn'), "Name Taken");
       } else {
-        $(location).attr('href', 'ProjectSettings.php?name=' + projectName + "&id=" + $('body').attr('id').split('-')[2]);
+        $(location).attr(
+          'href',
+          'ProjectSettings.php?name=' + projectName + "&id=" + $('body').attr('id').split('-')[2]);
       }
     });
   });
@@ -70,8 +72,10 @@ function editProjectName() {
 function editProjectDesc() {
 
   $('#form-project-description').click(function() {
-      $('#save-desc-btn').text('save').removeClass('btn-danger').addClass('btn-primary');
+      $('#save-desc-btn').text('Save').removeClass('btn-danger').addClass('btn-primary');
       $(this).removeClass('is-invalid');
+      $('#save-desc-label-success').hide();
+      $('#save-desc-span-success').hide();
   });
 
   $('#save-desc-btn').click(function() {
@@ -86,8 +90,15 @@ function editProjectDesc() {
       }
     }
 
-    // TODO: send information off to the server
-
+    $.post('backend/EditProjectDescription.php', {
+      projectName: $('title').text().split(" ")[0],
+      projectDesc: projectDesc
+    }, function() {
+      $('#save-desc-label-success').removeAttr('hidden');
+      $('#save-desc-label-success').show();
+      $('#save-desc-span-success').removeAttr('hidden');
+      $('#save-desc-span-success').show();
+    });
   });
 }
 
@@ -96,14 +107,25 @@ function editPrivateTof() {
   $('input[type=radio]').change(function() {
     var privateToF = $('#form-private-select').is(":checked");
 
-    // TODO: send information off to the server
+    console.log("PRIVATE TOF = "+ privateToF)
+
+    $.post('backend/EditProjectPrivateToF.php', {
+      projectName: $('title').text().split(" ")[0],
+      privateToF: privateToF
+    });
   });
 }
 
 function onUserAdd(userId) {
-  // TODO: send information off to the server
+  $.post('backend/AddUserToProject.php', {
+    projectName: $('title').text().split(" ")[0],
+    userId: userId
+  });
 }
 
 function onUserRemove(userId) {
-  // TODO: send information off to the server
+  $.post('backend/RemoveUserFromProject.php', {
+    projectName: $('title').text().split(" ")[0],
+    userId: userId
+  });
 }

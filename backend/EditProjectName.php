@@ -30,13 +30,9 @@
     return;
   }
 
-  $statement = $db->prepare("UPDATE user_projects SET name=? WHERE name=? AND id=?");
-  $statement->bindValue(1, $newProjectName, SQLITE3_TEXT);
-  $statement->bindValue(2, $currentProjectName, SQLITE3_TEXT);
-  $statement->bindValue(3, $_SESSION['sess_id'], SQLITE3_INTEGER);
+  require 'UpdateUserProject.php';
+  updateProject($currentProjectName, "SET name=?", $newProjectName, SQLITE3_TEXT);
 
-  $statement->execute();
-
-  $db->close();
+  $_SESSION['editprojectname'] = 'true';
 
 ?>

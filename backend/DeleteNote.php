@@ -13,8 +13,6 @@ error_reporting(E_ALL);
 
   require 'EnforceSqliteConnection.php';
 
-  echo "deleting a note with id = " . $noteId . " and a name of = " . $projectName;
-
   $changeNoteStmt = $db->prepare("DELETE FROM notes WHERE id=? AND owner_id=? AND project_name=?");
   $changeNoteStmt->bindValue(1, $noteId, SQLITE3_INTEGER);
   $changeNoteStmt->bindValue(2, $_SESSION['pageOwnerId'], SQLITE3_INTEGER);

@@ -67,7 +67,7 @@
   $makeProjectStmt->bindValue(1, $_SESSION['sess_id'], SQLITE3_INTEGER);
   $makeProjectStmt->bindValue(2, $projectName, SQLITE3_TEXT);
   $makeProjectStmt->bindValue(3, $projectDesc, SQLITE3_TEXT);
-  $makeProjectStmt->bindValue(4, $privateToF ? 1 : 0, SQLITE3_INTEGER);
+  $makeProjectStmt->bindValue(4, $privateToF == "true" ? 1 : 0, SQLITE3_INTEGER);
   $makeProjectStmt->bindValue(5, $strUserIds, SQLITE3_TEXT);
 
   $makeProjectStmt->execute();

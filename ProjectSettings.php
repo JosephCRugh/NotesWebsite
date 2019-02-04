@@ -69,14 +69,30 @@
           <h2>Change Project Settings</h2><br>
           <form>
             <div class="form-group">
+              <?php
+
+                $editedProjectName = $_SESSION['editprojectname'];
+                $showProjectNameSave = false;
+                if (isset($editedProjectName)) {
+                  if ($editedProjectName == 'true') {
+                    $showProjectNameSave = true;
+                    $_SESSION['editprojectname'] = 'false';
+                  }
+                }
+
+              ?>
               <h4>Project Name</h4>
               <input id="form-project-name" class="form-control input-field-look" placeholder="Change Project Name" value="<?php echo $_GET['name']; ?>"></input>
               <button id="save-name-btn" type="button" class="btn btn-primary button-saves">Save</button>
+              <span id="save-name-label-success" class="glyphicon glyphicon-ok saved-label" <?php
+                  if (!$showProjectNameSave) echo "hidden";
+                ?>></span><label id="save-name-span-success" class="saved-label" <?php if (!$showProjectNameSave) echo "hidden"; ?>>&nbsp;Saved</label>
             </div>
             <div class="form-group">
               <h4>Project Description</h4>
               <input id="form-project-description" class="form-control input-field-look" placeholder="Change Project Description" value="<?php echo $projectsSearchResult[2]; ?>"></input>
               <button id="save-desc-btn" type="button" class="btn btn-primary button-saves">Save</button>
+              <span id="save-desc-span-success" class="glyphicon glyphicon-ok saved-label" hidden></span><label id="save-desc-label-success" class="saved-label" hidden>&nbsp;Saved</label>
             </div>
             <div class="form-group">
               <div class="radio-btn-look">
