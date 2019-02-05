@@ -7,12 +7,22 @@ class Note {
     this.noteId = noteId;
     this.isInputTitle = false;
     this.inputTitle = inputTitle;
-    this.inputTitle.hide();
     this.headerTitle = headerTitle;
     this.noteDiv = noteDiv;
     this.previousTitle = headerTitle.text();
 
-    noteDiv.draggable({ containment: "#notes-container" });
+    noteDiv.draggable({
+      containment: "#notes-container",
+      stop: function(event, ui) {
+
+        $.post('backend/ChangeNotePosition.php', {
+          projectName: $('title').text(),
+          noteId: noteId,
+          posX: $(this).position().left,
+          posY: $(this).position().top
+        });
+      }
+    });
   }
 
   getPreviousTitle() {
@@ -50,6 +60,18 @@ class Note {
 
 $(document).ready(function() {
 
+  $('.notes-style').each(function (noteDiv) {
+    $(this).find('div input').hide();
+  });
+
+  searchForNotes();
+
+  // No reason to let users that don't have access to editing,
+  // perform edit actions.
+  if ($('body').attr('value').split('-')[3] == "false") {
+    return;
+  }
+
   setupNodes();
 
   addNotes();
@@ -58,8 +80,32 @@ $(document).ready(function() {
 
 });
 
+function searchForNotes() {
+
+  $('#note-search-input').on('input', function() {
+    var searchValue = $(this).val();
+
+    if (searchValue === "") {
+      $('.notes-style').each(function() { $(this).css("background", "white"); });
+      return;
+    }
+
+    $('.notes-style').each(function() {
+
+      if ($(this).find('div h3').text().search(searchValue) !== -1) {
+        $(this).css("background", "rgb(157, 182, 224)");
+      } else {
+        $(this).css("background", "white");
+      }
+
+    });
+  });
+
+}
+
 function setupNodes() {
-  $('.notes-style').each(function (noteDiv) {
+
+  $('.notes-style').each(function () {
       var noteId = parseInt($(this).attr('id').split('-')[1]);
       performNoteActions(new Note(noteId, $(this), $(this).find('div input'), $(this).find('div h3')));
       currentNoteId = noteId + 1;
@@ -95,8 +141,6 @@ function addNotes() {
       posX: noteDiv.position().left,
       posY: noteDiv.position().top
     });
-
-    note.performEditNoteTitle(note);
 
     findCurrentId();
   });

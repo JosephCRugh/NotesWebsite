@@ -13,12 +13,21 @@
     $projectsSearchResult = $retrievalData['projectSearchResult']->fetchArray();
 
     $sessionId = $_SESSION['sess_id'];
+    $hasWriteAccess = false;
     if ($sessionId !== $projectsSearchResult[0]) {
-      if ($projectsSearchResult[3] === 1) {
-        if (!in_array($sessionId, explode(",", $projectsSearchResult[4]))) {
+
+      $isAddedToProject = in_array($sessionId, explode(",", $projectsSearchResult[4]));
+
+      if ($projectsSearchResult[3] == "1") {
+        if (!$isAddedToProject) {
           header( 'Location: NoAccessToPage.php' );
         }
+        $hasWriteAccess = true;
+      } else {
+        $hasWriteAccess = $isAddedToProject;
       }
+    } else {
+      $hasWriteAccess = true;
     }
 
     // Since they have access to the page we are going to store the page owner id.
@@ -49,7 +58,7 @@
     <title><?php echo $_GET['name']; ?></title>
 
   </head>
-  <body class="home-background-color">
+  <body class="home-background-color" value="<?php echo "has-write-access-" . ($hasWriteAccess ? "true" : "false"); ?>">
 
     <nav class="navbar navbar-expand-lg navbar-light nav-style">
 
@@ -76,7 +85,7 @@
 
     <div id="notes-action-buttons">
       <button id="add-note-button" type="button" class="btn btn-primary">Add Note</button>
-      <input type="text" class="form-control" placeholder="Search For Note"></input>
+      <input id="note-search-input" type="text" class="form-control" placeholder="Search For Note"></input>
       <p style="display: inline;"><?php echo $projectDesc; ?></p>
     </div>
 
@@ -99,7 +108,7 @@
               '<span name="title-edit" class="glyphicon glyphicon-pencil"></span>' .
               '<input type="text" class="form-control"></input>' .
             '</div>' .
-            '<textarea class="form-control z-depth-1">' . $row[3] . '</textarea>' .
+            '<textarea class="form-control z-depth-1" ' . ($hasWriteAccess ? '' : 'disabled="disabled"') . '>' . $row[3] . '</textarea>' .
             '<div class="notes-bottom">' .
               '<button type="text" class="btn btn-primary" style="width: 100%;" hidden>Finish Edit</button>' .
               '<span name="notes-delete" class="glyphicon glyphicon-trash"></span>' .

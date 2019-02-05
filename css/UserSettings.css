@@ -1,0 +1,26 @@
+.form-control-file {
+  margin-top: 10px;
+}
+
+.input-look {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 14px;
+  padding: 3px;
+}
+
+.btn-save {
+  font-size: 15px;
+}
+
+#saved-pass-label {
+  color: rgb(164, 166, 168);
+}
+
+#saved-pass-span {
+  color: rgb(164, 166, 168);
+}
+
+#submit-new-password {
+  width: 200px;
+}

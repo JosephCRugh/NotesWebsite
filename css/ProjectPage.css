@@ -97,3 +97,7 @@
   font-size: 15px;
   margin-top: 15px;
 }
+
+#notes-action-buttons p {
+  color: rgb(163, 163, 163);
+}

@@ -107,8 +107,6 @@ function editPrivateTof() {
   $('input[type=radio]').change(function() {
     var privateToF = $('#form-private-select').is(":checked");
 
-    console.log("PRIVATE TOF = "+ privateToF)
-
     $.post('backend/EditProjectPrivateToF.php', {
       projectName: $('title').text().split(" ")[0],
       privateToF: privateToF
