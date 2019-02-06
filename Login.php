@@ -3,7 +3,7 @@
   session_start();
 
   if (isset($_SESSION['email'])) {
-    header( 'Location: HomePage.php' );
+    header( 'Location: index.php' );
   }
 ?>
 

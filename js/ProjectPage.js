@@ -1,3 +1,21 @@
+function init() {
+  // This may be changed to reflect the actual address.
+  socket = new WebSocket('ws://localhost:8080/');
+  socket.addEventListener('open', onConnectionOpen);
+  socket.addEventListener('message', onMessageReceived);
+
+}
+
+function onConnectionOpen(event) {
+  console.log("Connection Started!");
+}
+
+function onMessageReceived(event) {
+  console.log("received message!");
+}
+
+window.addEventListener("load", init, false);
+
 var noteIdToDelete = -1;
 var currentNoteId = 0;
 

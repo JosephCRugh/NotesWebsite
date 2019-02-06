@@ -146,7 +146,7 @@ function attemptRegister() {
             if (response === "fail") {
               setFailButton(subBtn, "Email Taken");
             } else if (response === "success") {
-              $(location).attr('href', 'HomePage.php');
+              $(location).attr('href', 'index.php');
             }
     });
 

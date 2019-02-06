@@ -6,6 +6,6 @@
   </head>
   <body>
     <h2>No Access To Page</h2>
-    <a href="HomePage.php">Click here to return home</a>
+    <a href="index.php">Click here to return home</a>
   </body>
 </html>

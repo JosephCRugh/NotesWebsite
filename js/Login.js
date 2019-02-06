@@ -64,13 +64,14 @@ function attemptLogin() {
       return;
     }
 
+    console.log("Now requesting to be transfered between pages?");
     $.post("backend/ProcessLogin.php",
           { email: email, password: password },
           function(response) {
           if (response === "fail") {
             setFailButton(logBtn, "Invalid Email Or Password");
           } else if (response === "success") {
-            $(location).attr('href', 'HomePage.php');
+            $(location).attr('href', 'index.php');
           }
     });
   });

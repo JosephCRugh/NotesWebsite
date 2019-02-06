@@ -46,7 +46,7 @@
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
-
+    
     <script src="js/SharedForm.js"></script>
     <script src="js/UserNavModel.js"></script>
     <script src="js/ProjectPage.js"></script>
@@ -67,7 +67,7 @@
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav">
           <li class="nav-item active">
-            <a id="nav-link-color" class="nav-link" href="HomePage.php"><span class="glyphicon glyphicon-home"></span> Home<span class="sr-only">(current)</span></a>
+            <a id="nav-link-color" class="nav-link" href="index.php"><span class="glyphicon glyphicon-home"></span> Home<span class="sr-only">(current)</span></a>
           </li>
           <?php
             // Display a settings option for the owner.
