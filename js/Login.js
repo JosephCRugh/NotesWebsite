@@ -64,7 +64,6 @@ function attemptLogin() {
       return;
     }
 
-    console.log("Now requesting to be transfered between pages?");
     $.post("backend/ProcessLogin.php",
           { email: email, password: password },
           function(response) {

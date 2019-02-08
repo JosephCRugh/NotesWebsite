@@ -32,10 +32,12 @@
   $newNoteStmt = $db->prepare($insertStr);
   if (isset($maxId)) {
 
+    echo ($maxId + 1);
     $newNoteStmt->bindValue(1, $maxId + 1, SQLITE3_INTEGER);
 
   } else {
 
+    echo "0";
     $newNoteStmt->bindValue(1, 0, SQLITE3_INTEGER);
 
   }

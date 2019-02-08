@@ -32,6 +32,8 @@
 
     // Since they have access to the page we are going to store the page owner id.
     $_SESSION['pageOwnerId'] = $_GET['id'];
+    $_SESSION['currentProject'] = $_GET['name'];
+    $_SESSION['hasWriteAccess'] = $hasWriteAccess;
     $projectDesc = $projectsSearchResult[2];
 
     $retrievalData['database']->close();
@@ -46,7 +48,7 @@
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
-    
+
     <script src="js/SharedForm.js"></script>
     <script src="js/UserNavModel.js"></script>
     <script src="js/ProjectPage.js"></script>
@@ -59,6 +61,12 @@
 
   </head>
   <body class="home-background-color" value="<?php echo "has-write-access-" . ($hasWriteAccess ? "true" : "false"); ?>">
+
+    <div id="sock-address" value="<?php
+      $addressFile = fopen("WebSocketAddress", "r") or die("Failed to read websocket address.");
+      echo fread($addressFile, filesize("WebSocketAddress"));
+      fclose($addressFile);
+    ?>"></div>
 
     <nav class="navbar navbar-expand-lg navbar-light nav-style">
 
