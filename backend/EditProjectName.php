@@ -1,11 +1,14 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
   require 'EnforceSession.php';
 
-  $currentProjectName = $_POST['currentProjectName'];
+  $projectId = $_POST['projectId'];
   $newProjectName = $_POST['newProjectName'];
 
-  if (empty($currentProjectName) || empty($newProjectName)) {
+  if (empty($newProjectName)) {
     return;
   }
 
@@ -17,7 +20,7 @@
     return;
   }
 
-  if ($_SESSION['pageOwnerId'] != $_SESSION['sess_id']) {
+  if ($_SESSION['pageOwnerId'] != $_SESSION['user_id']) {
     return;
   }
 
@@ -31,8 +34,6 @@
   }
 
   require 'UpdateUserProject.php';
-  updateProject($currentProjectName, "SET name=?", $newProjectName, SQLITE3_TEXT);
-
-  $_SESSION['editprojectname'] = 'true';
+  updateProject($projectId, "SET name=?", $newProjectName, SQLITE3_TEXT);
 
 ?>

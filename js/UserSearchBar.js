@@ -64,7 +64,7 @@ function processUserSearch() {
       appendedOnce = true;
 
       var conjoinedName = userInfo.first_name + " " + userInfo.last_name;
-      namesList.append('<li name="' + conjoinedName +  '" id="user-id-' + userInfo.id + '"><label>' + conjoinedName + '</label></li>')
+      namesList.append('<li name="' + conjoinedName +  '" id="user-id-' + userInfo.user_id + '"><label>' + conjoinedName + '</label></li>')
     }
 
     if (!appendedOnce) {

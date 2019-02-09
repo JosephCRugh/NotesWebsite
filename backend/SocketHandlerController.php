@@ -6,7 +6,7 @@ use Ratchet\ConnectionInterface;
 
 class UserLock {
   public $pageOwnerId;
-  public $currentProject;
+  public $currentProjectId;
   public $hasWriteAccess;
   public $noteId = -1;
 }
@@ -34,8 +34,8 @@ class SocketHandlerController implements MessageComponentInterface {
       $responseData = json_decode($json);
 
       $this->userLocks[$conn->resourceId]->pageOwnerId = $responseData->{'pageOwnerId'};
-      $this->userLocks[$conn->resourceId]->sessId = $responseData->{'sess_id'};
-      $this->userLocks[$conn->resourceId]->currentProject = $responseData->{'currentProject'};
+      $this->userLocks[$conn->resourceId]->sessId = $responseData->{'user_id'};
+      $this->userLocks[$conn->resourceId]->currentProjectId = $responseData->{'currentProjectId'};
       $this->userLocks[$conn->resourceId]->hasWriteAccess = $responseData->{'hasWriteAccess'};
 
   }
@@ -168,7 +168,7 @@ class SocketHandlerController implements MessageComponentInterface {
       } else if (
         // Must be working on the same project.
         $this->userLocks[$conn->resourceId]->pageOwnerId != $this->userLocks[$client->resourceId]->pageOwnerId ||
-        $this->userLocks[$conn->resourceId]->currentProject != $this->userLocks[$client->resourceId]->currentProject
+        $this->userLocks[$conn->resourceId]->currentProjectId != $this->userLocks[$client->resourceId]->currentProjectId
       ) {
         continue;
       }

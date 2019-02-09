@@ -80,7 +80,8 @@ function submitForm() {
         $('#form-project-name').addClass('is-invalid');
         setFailButton($('#submit-create-project'), "Project Name Taken");
       } else {
-        $(location).attr('href', 'ProjectPage.php?name=' + projectName + "&id=" + response);
+        var responseValues = response.split(":");
+        $(location).attr('href', 'ProjectPage.php?pid=' + responseValues[0] + "&uid=" + responseValues[1]);
       }
     });
   });

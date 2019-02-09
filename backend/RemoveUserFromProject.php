@@ -2,7 +2,7 @@
 
   require 'EnforceSession.php';
 
-  $projectName = $_POST['projectName'];
+  $projectId = $_POST['projectId'];
   $userId = $_POST['userId'];
 
   if ($userId < 0) {
@@ -10,7 +10,7 @@
   }
 
   require 'GetProjectUserIds.php';
-  $currentUserIds = getProjectProjectIds($projectName);
+  $currentUserIds = getProjectProjectIds($projectId);
   $currentUserIdsArr = explode(',', $currentUserIds);
 
   unset($currentUserIdsArr[array_search($userId, $currentUserIdsArr)]);
@@ -23,6 +23,6 @@
   $newUserIds = rtrim($newUserIds, ",");
 
   require 'UpdateUserProject.php';
-  updateProject($projectName, "SET user_ids=?", $newUserIds, SQLITE3_TEXT);
+  updateProject($projectId, "SET added_user_ids=?", $newUserIds, SQLITE3_TEXT);
 
 ?>

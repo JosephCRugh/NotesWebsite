@@ -1,9 +1,12 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
   require 'EnsureNoteEditAccess.php';
 
-  $projectName = $_POST['projectName'];
-  checkNoteEditStatus($projectName);
+  $projectId = $_POST['projectId'];
+  checkNoteEditStatus($projectId);
 
   $noteId = $_POST['noteId'];
   $bodyContent = $_POST['content'];
@@ -14,11 +17,11 @@
 
   require 'EnforceSqliteConnection.php';
 
-  $changeNoteStmt = $db->prepare("UPDATE notes SET content=? WHERE id=? AND owner_id=? AND project_name=?");
+  $changeNoteStmt = $db->prepare("UPDATE user_notes SET content=? WHERE note_id=? AND user_id=? AND project_id=?");
   $changeNoteStmt->bindValue(1, $bodyContent, SQLITE3_TEXT);
   $changeNoteStmt->bindValue(2, $noteId, SQLITE3_INTEGER);
   $changeNoteStmt->bindValue(3, $_SESSION['pageOwnerId'], SQLITE3_INTEGER);
-  $changeNoteStmt->bindValue(4, $projectName, SQLITE3_TEXT);
+  $changeNoteStmt->bindValue(4, $projectId, SQLITE3_INTEGER);
 
   $changeNoteStmt->execute();
 

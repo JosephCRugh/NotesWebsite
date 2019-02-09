@@ -1,11 +1,11 @@
 <?php
 
-  function getProjectProjectIds($projectName) {
+  function getProjectProjectIds($projectId) {
     require 'EnforceSqliteConnection.php';
 
-    $getUserIdsStmt = $db->prepare("SELECT user_ids FROM user_projects WHERE name=? AND id=?");
-    $getUserIdsStmt->bindValue(1, $projectName, SQLITE3_TEXT);
-    $getUserIdsStmt->bindValue(2, $_SESSION['sess_id'], SQLITE3_INTEGER);
+    $getUserIdsStmt = $db->prepare("SELECT added_user_ids FROM user_projects WHERE project_id=? AND user_id=?");
+    $getUserIdsStmt->bindValue(1, $projectId, SQLITE3_INTEGER);
+    $getUserIdsStmt->bindValue(2, $_SESSION['user_id'], SQLITE3_INTEGER);
 
     $userIdsResult = $getUserIdsStmt->execute();
     $currentUserIds = $userIdsResult->fetchArray()[0];

@@ -5,9 +5,9 @@
       session_id($value);
       session_start();
       echo json_encode(array(
-        "sess_id" => $_SESSION['sess_id'],
+        "user_id" => $_SESSION['user_id'],
         "pageOwnerId" => $_SESSION['pageOwnerId'],
-        "currentProject" => $_SESSION['currentProject'],
+        "currentProjectId" => $_SESSION['currentProjectId'],
         "hasWriteAccess" => $_SESSION['hasWriteAccess']
       ));
     }

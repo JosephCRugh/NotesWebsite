@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
   require 'EnforceSession.php';
 
@@ -77,7 +80,7 @@
 
   $newUserStatement->execute();
 
-  $selectIdStatement = $db->prepare("SELECT id FROM user_credentials WHERE email=?");
+  $selectIdStatement = $db->prepare("SELECT user_id FROM user_credentials WHERE email=?");
   $selectIdStatement->bindValue(1, $email, SQLITE3_TEXT);
 
   $idResult = $selectIdStatement->execute();
@@ -85,7 +88,7 @@
   $_SESSION['email'] = $email;
   $_SESSION['first_name'] = $firstName;
   $_SESSION['last_name'] = $lastName;
-  $_SESSION['sess_id'] = $idResult->fetchArray()[0];
+  $_SESSION['user_id'] = $idResult->fetchArray()[0];
 
   $db->close();
   echo "success";

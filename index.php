@@ -40,14 +40,14 @@
 
           require "backend/RetrieveProjectsInfo.php";
 
-          $retrievalData = getUserProjectInfo($_SESSION['sess_id']);
+          $retrievalData = getUserProjectInfo($_SESSION['user_id']);
           $projectsSearchResult = $retrievalData['projectSearchResult'];
 
           // TODO: Add functionality to allow the user to see the hidden projects
           // They have.
           $count = 0;
           while ($row = $projectsSearchResult->fetchArray()) {
-            echo '<div name="existing-project" id=form-project-' . $row[0] . ' class="col-sm"'
+            echo '<div name="existing-project" id=form-user-' . $row[5] . '-' . $row[0] . ' class="col-sm"'
             . ($count < 3 ? '' : 'hidden') . '>
               <div >' . $row[1] . '</div>
             </div>';

@@ -2,7 +2,7 @@
 
   require 'EnforceSession.php';
 
-  $projectName = $_POST['projectName'];
+  $projectId = $_POST['projectId'];
   $userId = $_POST['userId'];
 
   if ($userId < 0) {
@@ -10,16 +10,20 @@
   }
 
   require 'GetProjectUserIds.php';
-  $currentUserIds = getProjectProjectIds($projectName);
+  $currentUserIds = getProjectProjectIds($projectId);
 
   // There is no reason to add the user more than once to the array.
   if (in_array($userId, explode(',',  $currentUserIds))) {
     return;
   }
 
-  $currentUserIds .= "," . $userId;
+  if (empty($currentUserIds)) {
+      $currentUserIds = $userId;
+  } else {
+    $currentUserIds .= "," . $userId;
+  }
 
   require 'UpdateUserProject.php';
-  updateProject($projectName, "SET user_ids=?", $currentUserIds, SQLITE3_TEXT);
+  updateProject($projectId, "SET added_user_ids=?", $currentUserIds, SQLITE3_TEXT);
 
 ?>

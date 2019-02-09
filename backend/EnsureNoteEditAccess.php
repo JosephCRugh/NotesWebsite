@@ -1,6 +1,6 @@
 <?php
 
-  function checkNoteEditStatus($projectName) {
+  function checkNoteEditStatus($projectId) {
     require 'RetrieveProjectsInfo.php';
 
     if (!isset($_SESSION)) {
@@ -12,12 +12,12 @@
       return;
     }
 
-    $retrievalData = getUserProjectInfoByName($_SESSION['pageOwnerId'], $projectName);
+    $retrievalData = getUserProjectInfoByIds($_SESSION['pageOwnerId'], $projectId);
     $projectsSearchResult = $retrievalData['projectSearchResult']->fetchArray();
 
     // If the page is private or public does not matter. They still require access
     // to the page.
-    if (!in_array($_SESSION['sess_id'], explode(",", $projectsSearchResult[4]))) {
+    if (!in_array($_SESSION['user_id'], explode(",", $projectsSearchResult[4]))) {
       header( 'Location: ../NoAccessToPage.php' );
     }
 

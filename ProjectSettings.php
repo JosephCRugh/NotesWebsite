@@ -6,11 +6,11 @@
 
   // Making sure this is the user's setting's page.
   {
-    if ($_SESSION['sess_id'] != $_GET['id']) {
+    if ($_SESSION['user_id'] != $_GET['uid']) {
       header( 'Location: NoAccessToPage.php' );
     }
 
-    $_SESSION['pageOwnerId'] = $_GET['id'];
+    $_SESSION['pageOwnerId'] = $_GET['uid'];
   }
 
 ?>
@@ -31,10 +31,15 @@
     <link rel="stylesheet" type="text/css" href="css/SharedNav.css">
     <link rel="stylesheet" type="text/css" href="css/ProjectSettings.css">
 
-    <title><?php echo $_GET['name'] . " Settings"; ?></title>
+    <?php
+      require 'backend/RetrieveProjectsInfo.php';
+      $retrievalData = getUserProjectInfoByIds($pageOwnerId, $_GET['pid']);
+      $projectsSearchResult = $retrievalData['projectSearchResult']->fetchArray();
+    ?>
+    <title><?php echo $projectsSearchResult[1] . " Settings"; ?></title>
 
   </head>
-  <body id="project-id-<?php echo $_GET['id']; ?>">
+  <body id="project-id-<?php echo $_GET['uid']; ?>" value="project-id-<?php echo $_GET['pid'] ?>" >
 
     <nav class="navbar navbar-expand-lg navbar-light nav-style">
 
@@ -46,7 +51,7 @@
             <a id="nav-link-color" class="nav-link" href="index.php"><span class="glyphicon glyphicon-home"></span> Home<span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item active">
-            <a id="nav-link-color" class="nav-link" href="ProjectPage.php?name=<?php echo $_GET['name']; ?>&id=<?php echo $_GET['id']; ?>"> Project<span class="sr-only">(current)</span></a>
+            <a id="nav-link-color" class="nav-link" href="ProjectPage.php?pid=<?php echo $_GET['pid']; ?>&uid=<?php echo $_GET['uid']; ?>"> Project<span class="sr-only">(current)</span></a>
           </li>
         </ul>
       </div>
@@ -54,39 +59,16 @@
       <?php include 'templates/NavUserToolbar.php' ?>
     </nav>
 
-    <?php
-
-      require 'backend/RetrieveProjectsInfo.php';
-
-      $retrievalData = getUserProjectInfoByName($pageOwnerId, $_GET['name']);
-      $projectsSearchResult = $retrievalData['projectSearchResult']->fetchArray();
-
-    ?>
-
     <div class="container">
       <div class="row">
         <div class="col-4">
           <h2>Change Project Settings</h2><br>
           <form>
             <div class="form-group">
-              <?php
-
-                $editedProjectName = $_SESSION['editprojectname'];
-                $showProjectNameSave = false;
-                if (isset($editedProjectName)) {
-                  if ($editedProjectName == 'true') {
-                    $showProjectNameSave = true;
-                    $_SESSION['editprojectname'] = 'false';
-                  }
-                }
-
-              ?>
               <h4>Project Name</h4>
-              <input id="form-project-name" class="form-control input-field-look" placeholder="Change Project Name" value="<?php echo $_GET['name']; ?>"></input>
+              <input id="form-project-name" class="form-control input-field-look" placeholder="Change Project Name" value="<?php echo $projectsSearchResult[1]; ?>"></input>
               <button id="save-name-btn" type="button" class="btn btn-primary button-saves">Save</button>
-              <span id="save-name-label-success" class="glyphicon glyphicon-ok saved-label" <?php
-                  if (!$showProjectNameSave) echo "hidden";
-                ?>></span><label id="save-name-span-success" class="saved-label" <?php if (!$showProjectNameSave) echo "hidden"; ?>>&nbsp;Saved</label>
+              <span id="save-name-label-success" class="glyphicon glyphicon-ok saved-label" hidden></span><label id="save-name-span-success" class="saved-label" <?php if (!$showProjectNameSave) echo "hidden"; ?>>&nbsp;Saved</label>
             </div>
             <div class="form-group">
               <h4>Project Description</h4>
@@ -126,7 +108,7 @@
                       $userAddedIds = explode(",", $projectsSearchResult[4]);
                       foreach ($userAddedIds as &$userId) {
 
-                        $userStmt = $db->prepare("SELECT first_name, last_name FROM user_credentials WHERE id=?");
+                        $userStmt = $db->prepare("SELECT first_name, last_name FROM user_credentials WHERE user_id=?");
                         $userStmt->bindValue(1, $userId, SQLITE3_INTEGER);
 
                         $result = $userStmt->execute();

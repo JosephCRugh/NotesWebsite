@@ -2,7 +2,7 @@
 
   require 'EnforceSession.php';
 
-  $projectName = $_POST['projectName'];
+  $projectId = $_POST['projectId'];
   $projectDesc = $_POST['projectDesc'];
 
   if (!empty($projectDesc)) {
@@ -12,6 +12,6 @@
   }
 
   require 'UpdateUserProject.php';
-  updateProject($projectName, "SET description=?", $projectDesc, SQLITE3_TEXT);
+  updateProject($projectId, "SET description=?", $projectDesc, SQLITE3_TEXT);
 
 ?>

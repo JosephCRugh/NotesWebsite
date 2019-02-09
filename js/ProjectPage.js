@@ -232,7 +232,7 @@ function addNotes() {
   $('#add-note-button').click(function() {
 
     $.post("backend/AddNote.php", {
-      projectName: $('title').text(),
+      projectId: $('body').attr('id').split('-')[2],
       title: "Title",
       posX: 0,
       posY: 82
@@ -294,7 +294,7 @@ function deleteNotes() {
 
     // Telling the server to delete the note.
     $.post("backend/DeleteNote.php", {
-      projectName: $('title').text(),
+      projectId: $('body').attr('id').split('-')[2],
       noteId: noteIdToDelete
     }, function(response) {
 
@@ -352,7 +352,7 @@ function processNoteContentEdit(note, noteDiv) {
     noteDiv.find('button').hide();
 
     $.post('backend/ChangeNoteContent.php', {
-      projectName: $('title').text(),
+      projectId: $('body').attr('id').split('-')[2],
       noteId: note.getNoteId(),
       content: content
     }, function(response) {
@@ -427,7 +427,7 @@ function processNoteTitleChange(note, noteDiv) {
 
   // Sending the new title off to the server.
   $.post("backend/ChangeNoteTitle.php", {
-    projectName: $('title').text(),
+    projectId: $('body').attr('id').split('-')[2],
     noteId: note.getNoteId(),
     title: note.getHeaderTitle().text()
   }, function(response) {
@@ -475,7 +475,7 @@ function performNoteMovement(note, noteDiv) {
       editingNote = false;
 
       $.post('backend/ChangeNotePosition.php', {
-        projectName: $('title').text(),
+        projectId: $('body').attr('id').split('-')[2],
         noteId: note.getNoteId(),
         posX: $(this).position().left,
         posY: $(this).position().top

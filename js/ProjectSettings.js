@@ -54,16 +54,18 @@ function editProjectName() {
     }
 
     $.post("backend/EditProjectName.php", {
-      currentProjectName: currentProjectName,
+      projectId: $('body').attr('value').split('-')[2],
       newProjectName: projectName
     }, function(response) {
-      if (response == "fail") {
-        $('#form-project-name').addClass('is-invalid');
-        setFailButton($('#save-name-btn'), "Name Taken");
-      } else {
-        $(location).attr(
-          'href',
-          'ProjectSettings.php?name=' + projectName + "&id=" + $('body').attr('id').split('-')[2]);
+        if (response == "fail") {
+          $('#form-project-name').addClass('is-invalid');
+          setFailButton($('#save-name-btn'), "Name Taken");
+        } else {
+          $('title').text(projectName + " Settings");
+          $('#save-name-label-success').removeAttr('hidden');
+          $('#save-name-label-success').show();
+          $('#save-name-span-success').removeAttr('hidden');
+          $('#save-name-span-success').show();
       }
     });
   });
@@ -91,7 +93,7 @@ function editProjectDesc() {
     }
 
     $.post('backend/EditProjectDescription.php', {
-      projectName: $('title').text().split(" ")[0],
+      projectId: $('body').attr('value').split('-')[2],
       projectDesc: projectDesc
     }, function() {
       $('#save-desc-label-success').removeAttr('hidden');
@@ -108,7 +110,7 @@ function editPrivateTof() {
     var privateToF = $('#form-private-select').is(":checked");
 
     $.post('backend/EditProjectPrivateToF.php', {
-      projectName: $('title').text().split(" ")[0],
+      projectId: $('body').attr('value').split('-')[2],
       privateToF: privateToF
     });
   });
@@ -116,14 +118,14 @@ function editPrivateTof() {
 
 function onUserAdd(userId) {
   $.post('backend/AddUserToProject.php', {
-    projectName: $('title').text().split(" ")[0],
+    projectId: $('body').attr('value').split('-')[2],
     userId: userId
   });
 }
 
 function onUserRemove(userId) {
   $.post('backend/RemoveUserFromProject.php', {
-    projectName: $('title').text().split(" ")[0],
+    projectId: $('body').attr('value').split('-')[2],
     userId: userId
   });
 }

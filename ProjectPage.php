@@ -9,12 +9,12 @@
   {
     require 'backend/RetrieveProjectsInfo.php';
 
-    $retrievalData = getUserProjectInfoByName($pageOwnerId, $_GET['name']);
+    $retrievalData = getUserProjectInfoByIds($pageOwnerId, $_GET['pid']);
     $projectsSearchResult = $retrievalData['projectSearchResult']->fetchArray();
 
-    $sessionId = $_SESSION['sess_id'];
+    $sessionId = $_SESSION['user_id'];
     $hasWriteAccess = false;
-    if ($sessionId !== $projectsSearchResult[0]) {
+    if ($sessionId !== $projectsSearchResult[5]) {
 
       $isAddedToProject = in_array($sessionId, explode(",", $projectsSearchResult[4]));
 
@@ -31,10 +31,11 @@
     }
 
     // Since they have access to the page we are going to store the page owner id.
-    $_SESSION['pageOwnerId'] = $_GET['id'];
-    $_SESSION['currentProject'] = $_GET['name'];
+    $_SESSION['pageOwnerId'] = $_GET['uid'];
+    $_SESSION['currentProjectId'] = $_GET['pid'];
     $_SESSION['hasWriteAccess'] = $hasWriteAccess;
     $projectDesc = $projectsSearchResult[2];
+    $projectName = $projectsSearchResult[1];
 
     $retrievalData['database']->close();
   }
@@ -57,10 +58,10 @@
     <link rel="stylesheet" type="text/css" href="css/SharedNav.css">
     <link rel="stylesheet" type="text/css" href="css/ProjectPage.css">
 
-    <title><?php echo $_GET['name']; ?></title>
+    <title><?php echo $projectName; ?></title>
 
   </head>
-  <body class="home-background-color" value="<?php echo "has-write-access-" . ($hasWriteAccess ? "true" : "false"); ?>">
+  <body id="project-id-<?php echo $_SESSION['currentProjectId']; ?>" class="home-background-color" value="<?php echo "has-write-access-" . ($hasWriteAccess ? "true" : "false"); ?>">
 
     <div id="sock-address" value="<?php
       $addressFile = fopen("WebSocketAddress", "r") or die("Failed to read websocket address.");
@@ -79,9 +80,9 @@
           </li>
           <?php
             // Display a settings option for the owner.
-            if ($_SESSION['pageOwnerId'] == $_SESSION['sess_id']) {
+            if ($_SESSION['pageOwnerId'] == $_SESSION['user_id']) {
               echo '<li class="nav-item active">' .
-                      '<a id="nav-link-color" class="nav-link" href="ProjectSettings.php?name=' . $_GET['name'] . '&id=' . $_GET['id'] . '"> Project Settings</a>' .
+                      '<a id="nav-link-color" class="nav-link" href="ProjectSettings.php?pid=' . $_GET['pid'] . '&uid=' . $_GET['uid'] . '"> Project Settings</a>' .
                     '</li>';
             }
           ?>
@@ -103,20 +104,20 @@
         // Loading in the already existing notes for the page.
         require 'backend/EnforceSqliteConnection.php';
 
-        $notesQueryStmt = $db->prepare("SELECT * FROM notes WHERE owner_id=? AND project_name=?");
+        $notesQueryStmt = $db->prepare("SELECT * FROM user_notes WHERE user_id=? AND project_id=?");
         $notesQueryStmt->bindValue(1, $pageOwnerId, SQLITE3_INTEGER);
-        $notesQueryStmt->bindValue(2, $_GET['name'], SQLITE3_TEXT);
+        $notesQueryStmt->bindValue(2, $_GET['pid'], SQLITE3_INTEGER);
 
         $notesResult = $notesQueryStmt->execute();
 
         while ($row = $notesResult->fetchArray()) {
-          echo '<div class="notes-style" style="left: ' . $row[5] . '; top: ' . $row[6] . ';" id="note-' . $row[0] . '">' .
+          echo '<div class="notes-style" style="left: ' . $row[3] . '; top: ' . $row[4] . ';" id="note-' . $row[0] . '">' .
             '<div>' .
-              '<h3>' . $row[2] . '</h3>' .
+              '<h3>' . $row[1] . '</h3>' .
               '<span name="title-edit" class="glyphicon glyphicon-pencil"></span>' .
               '<input type="text" class="form-control"></input>' .
             '</div>' .
-            '<textarea class="form-control z-depth-1" ' . ($hasWriteAccess ? '' : 'disabled="disabled"') . '>' . $row[3] . '</textarea>' .
+            '<textarea class="form-control z-depth-1" ' . ($hasWriteAccess ? '' : 'disabled="disabled"') . '>' . $row[2] . '</textarea>' .
             '<div class="notes-bottom">' .
               '<button type="text" class="btn btn-primary" style="width: 100%;" hidden>Finish Edit</button>' .
               '<span name="notes-delete" class="glyphicon glyphicon-trash"></span>' .

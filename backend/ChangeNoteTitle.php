@@ -2,8 +2,8 @@
 
   require 'EnsureNoteEditAccess.php';
 
-  $projectName = $_POST['projectName'];
-  checkNoteEditStatus($projectName);
+  $projectId = $_POST['projectId'];
+  checkNoteEditStatus($projectId);
 
   $noteId = $_POST['noteId'];
   $title = $_POST['title'];
@@ -18,11 +18,11 @@
 
   require 'EnforceSqliteConnection.php';
 
-  $changeNoteStmt = $db->prepare("UPDATE notes SET title=? WHERE id=? AND owner_id=? AND project_name=?");
+  $changeNoteStmt = $db->prepare("UPDATE user_notes SET title=? WHERE note_id=? AND user_id=? AND project_id=?");
   $changeNoteStmt->bindValue(1, $title, SQLITE3_TEXT);
   $changeNoteStmt->bindValue(2, $noteId, SQLITE3_INTEGER);
   $changeNoteStmt->bindValue(3, $_SESSION['pageOwnerId'], SQLITE3_INTEGER);
-  $changeNoteStmt->bindValue(4, $projectName, SQLITE3_TEXT);
+  $changeNoteStmt->bindValue(4, $projectId, SQLITE3_INTEGER);
 
   $changeNoteStmt->execute();
 
