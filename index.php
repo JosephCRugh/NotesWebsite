@@ -35,6 +35,9 @@
 
     <div id="projects-pane" class="container">
       <div class="row">
+        <div class="arrow-container" name="left-arrow">
+          <span class="glyphicon glyphicon-chevron-left"></span>
+        </div>
         <?php
           // Loading in the users projects.
 
@@ -50,6 +53,9 @@
             echo '<div name="existing-project" id=form-user-' . $row[5] . '-' . $row[0] . ' class="col-sm"'
             . ($count < 3 ? '' : 'hidden') . '>
               <div >' . $row[1] . '</div>
+              <div class="trash-section">
+                <span class="glyphicon glyphicon-trash"></span>
+              </div>
             </div>';
             $count++;
           }
@@ -65,7 +71,17 @@
           $retrievalData['database']->close();
 
         ?>
+        <div class="arrow-container" name="right-arrow">
+          <span class="glyphicon glyphicon-chevron-right"></span>
+        </div>
       </div>
+    </div>
+
+    <div class="gray-overlay" hidden></div>
+
+    <div id="delete-option" hidden>
+      <button name="do-delete" type="button" class="btn btn-danger">Yes Delete</button>
+      <button name="no-delete" type="button" class="btn btn-primary">No Don't!</button>
     </div>
 
   </body>
