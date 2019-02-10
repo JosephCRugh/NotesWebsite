@@ -1,6 +1,6 @@
-##Notes Website
+## Notes Website
 
-###Content
+### Content
 ------
 - Registration/Login
 - Creating Projects and adding users
@@ -8,6 +8,6 @@
 - Changing profile picture for account / changing password
 - Other features not listed
 
-###Contributor
+### Contributor
 ------
 Developed by Joseph Rugh
