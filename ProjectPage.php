@@ -115,7 +115,7 @@
             '<div>' .
               '<h3>' . $row[1] . '</h3>' .
               '<span name="title-edit" class="glyphicon glyphicon-pencil"></span>' .
-              '<input type="text" class="form-control"></input>' .
+              '<input type="text" class="form-control" hidden></input>' .
             '</div>' .
             '<textarea class="form-control z-depth-1" ' . ($hasWriteAccess ? '' : 'disabled="disabled"') . '>' . $row[2] . '</textarea>' .
             '<div class="notes-bottom">' .

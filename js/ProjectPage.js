@@ -125,8 +125,7 @@ function handleLockResponse(response) {
       toggleNoteTitleInput(note);
     } else if (response.editing == "content") {
       var noteDiv = note.getNoteDiv();
-      noteDiv.find('div button').removeAttr('hidden');
-      noteDiv.find('div button').show();
+      noteDiv.find('div button').attr('hidden', false);
       noteDiv.find('.notes-bottom').css('height', '42px');
       noteDiv.find('textarea').prop('readonly', false);
       note.setTextAreaGainedFocus(true);
@@ -176,7 +175,7 @@ window.addEventListener("load", init, false);
 $(document).ready(function() {
 
   $('.notes-style').each(function (noteDiv) {
-    $(this).find('div input').hide();
+    $(this).find('div input').attr('hidden', true);
   });
 
   searchForNotes();
@@ -256,7 +255,7 @@ function addNewNote(setId) {
     '<div>' +
       '<h3>Title</h3>' +
       '<span name="title-edit" class="glyphicon glyphicon-pencil"></span>' +
-      '<input type="text" class="form-control"></input>' +
+      '<input type="text" class="form-control" hidden></input>' +
     '</div>' +
     '<textarea class="form-control z-depth-1"></textarea>' +
     '<div class="notes-bottom">' +
@@ -269,7 +268,6 @@ function addNewNote(setId) {
   let note = new Note(setId, noteDiv, noteDiv.find('div input'), noteDiv.find('div h3'));
   noteDiv.attr('id', 'note-' + setId);
   notes.set(setId, note);
-  noteDiv.find('div input').hide();
 
   performNoteActions(note);
 
@@ -278,16 +276,14 @@ function addNewNote(setId) {
 
 function deleteNotes() {
 
-  $('#delete-option').hide();
-
   $('#delete-option button[name="no-delete"]').click(function() {
-    $('#delete-option').hide();
-    $('.gray-overlay').hide();
+    $('#delete-option').attr('hidden', true);
+    $('.gray-overlay').attr('hidden', true);
   });
 
   $('#delete-option button[name="do-delete"]').click(function() {
-    $('#delete-option').hide();
-    $('.gray-overlay').hide();
+    $('#delete-option').attr('hidden', true);
+    $('.gray-overlay').attr('hidden', true);
 
     var note = notes.get(noteIdToDelete);
     requestNoteLock(note, "na");
@@ -349,7 +345,7 @@ function processNoteContentEdit(note, noteDiv) {
     }
 
     noteDiv.find('.notes-bottom').css('height', '20px');
-    noteDiv.find('button').hide();
+    noteDiv.find('button').attr('hidden', true);
 
     $.post('backend/ChangeNoteContent.php', {
       projectId: $('body').attr('id').split('-')[2],
@@ -377,10 +373,8 @@ function processNoteContentEdit(note, noteDiv) {
 
 function processNotePopupDltOpts(note, noteDiv) {
   noteDiv.find('div span[name="notes-delete"]').click(function() {
-    $('#delete-option').removeAttr('hidden');
-    $('#delete-option').show();
-    $('.gray-overlay').removeAttr('hidden');
-    $('.gray-overlay').show();
+    $('#delete-option').attr('hidden', false);
+    $('.gray-overlay').attr('hidden', false);
     noteIdToDelete = note.getNoteId();
   });
 }
@@ -486,6 +480,6 @@ function performNoteMovement(note, noteDiv) {
 
 function toggleNoteTitleInput(note) {
   note.getHeaderTitle().toggle();
-  note.getInputTitle().toggle();
+  note.getInputTitle().attr('hidden', !note.getInputTitle().attr('hidden'))
   note.getInputTitle().focus();
 }

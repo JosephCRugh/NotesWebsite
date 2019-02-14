@@ -30,7 +30,10 @@ class SocketHandlerController implements MessageComponentInterface {
               'method'=>'GET',
               'header'=>"inSessionId: $sessionId\r\n"
           )));
-      $json = file_get_contents('http://localhost:80/NotesSite/backend/GetProjectSession.php', false, $context);
+
+      $address = file('../WebSocketAddress', FILE_IGNORE_NEW_LINES);
+
+      $json = file_get_contents('http://' . $address[0] . ':80/NotesSite/backend/GetProjectSession.php', false, $context);
       $responseData = json_decode($json);
 
       $this->userLocks[$conn->resourceId]->pageOwnerId = $responseData->{'pageOwnerId'};
